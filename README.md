@@ -42,6 +42,18 @@ And you will see the output images within the snowy scene, taking just several s
 ### Enhance existing methods
 Now you can leverage these generated images to enhance the training process of existing Monocular 3D Object Detectors (e.g., MonoFlex, MonoGround, MonoCD) since we reuse the initial object annotations.
 
+#### Recommended Workflow
+1. Enhance all training images of KITTI (original) within a specific weather (e.g., snowy) following the above steps;
+
+2. Create a new KITTI root, replacing **only image_2** and reuse the original files (e.g., calib, label_2) via symlinks (i.e., ln -s );
+
+3. Mixed training with (e.g., original + snow) images is **necessary**. You can simply copy the definition code of the dataloader and replace the data root with your augmented directory;
+
+4. To ensure reproducibility, We simply mixed the data in **equal proportions**. But exploring data ratios under various augmentation scenarios could be beneficial;
+
+5. Since we only introduced additional data loading, the hyper-parameters of all baselines remain unchanged and can directly reproduce the reported performance. It simply involves **adding an extra dataloader** (e.g., [MonoFlex](https://github.com/zhangyp15/MonoFlex/blob/main/data/build.py#L58) ) and **loading it together with the original data in a training loop** (e.g. [MonoFlex](https://github.com/zhangyp15/MonoFlex/blob/ec6da017c325451b7d997d89e323083fa8430ada/engine/trainer.py#L103)).
+
+
 ## Citation
 If our DriveFlow method is helpful in your research, please consider citing our paper:
 ```
